@@ -76,6 +76,7 @@ return:
     ```
 - 信息详情
   path: `/user/newsDetail`
+  
   param: 
   ```json
     {"news_id":2}

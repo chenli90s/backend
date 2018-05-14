@@ -103,14 +103,15 @@ def news_list(request):
     try:
         data = request.body.decode()
         post = json.loads(data)
-        page_size = post.get('page_size')
-        current_page = post.get('current_page')
-        pages = News.objects.all().order_by("-news_dt")
-        pages = Paginator(pages, page_size)
-        all_page = pages.count
-        current_list = pages.page(current_page)
+        # page_size = post.get('page_size')
+        # current_page = post.get('current_page')
+        user_role = post.get('user_role')
+        pages = News.objects.filter(auth__user_role__contains=user_role).order_by("-news_dt")
+        # pages = Paginator(pages, page_size)
+        # all_page = pages.count
+        # current_list = pages.page(current_page)
         news_lists = []
-        for news in current_list:
+        for news in pages:
             print(news.news_dt)
             news_lists.append(dict(news_title=news.news_title,
                                    news_dt=news.news_dt.strftime('%Y-%m-%d %H:%M:%S'),
@@ -120,8 +121,8 @@ def news_list(request):
                                    phone=news.news_phone,
                                    ))
         return JsonResponse(resp(True, dict(
-            current_page=current_page,
-            all_page=all_page,
+            # current_page=current_page,
+            user_role=user_role,
             news=news_lists
         )))
     except Exception as e:

@@ -20,6 +20,7 @@ def login(request):
                                                 user_addr=users.user_addr,
                                                 user_real=users.user_real, )))
     except  Exception as e:
+        print(e)
         return JsonResponse(resp(False, '密码或用户名错误'))
     return JsonResponse(resp(False, '密码或用户名错误'))
 

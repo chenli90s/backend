@@ -95,7 +95,7 @@ def up_news(request):
             news.news_content = news_content
         news_count = post.get('news_count')
         if news_count:
-            news.news_content = news_count
+            news.news_count = news_count
         news_price = post.get('news_price')
         if news_price:
             news.news_price = news_price

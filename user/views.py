@@ -79,26 +79,30 @@ def del_news(request):
     except Exception as e:
         return JsonResponse(resp(False, '参数错误'))
 
-from datetime import datetime
+
 def up_news(request):
     try:
         data = request.body.decode()
         post = json.loads(data)
-        news = News.objects.filter(id=post.get('news_id')).first()
+        news = News.objects.get(id=post.get('news_id'))
         if post.get('news_title'):
             news.news_title = post.get('news_title')
         # if post.get('news_dt'):
         #     # news.news_dt = datetime.strptime(post.get('news_dt'), '%Y-%m-%d %H:%M:%S')
         #     news.news_dt = post.get('news_dt')
-        # if post.get('news_content'):
-            news.news_content = post.get('news_content')
-        # if post.get('news_count'):
-            news.news_content = post.get('news_count')
-        # if post.get('news_price'):
-            news.news_content = post.get('news_price')
-        # if post.get('news_phone'):
-            news.news_content = post.get('news_phone')
-        news.save(force_update=True)
+        news_content = post.get('news_content')
+        if news_content:
+            news.news_content = news_content
+        news_count = post.get('news_count')
+        if news_count:
+            news.news_content = news_count
+        news_price = post.get('news_price')
+        if news_price:
+            news.news_price = news_price
+        news_phone = post.get('news_phone')
+        if news_phone:
+            news.news_phone = news_phone
+        news.save()
         return JsonResponse(resp(True, '修改成功'))
     except Exception as e:
         print(e)
@@ -126,7 +130,7 @@ def news_list(request):
                                    price=news.news_price,
                                    phone=news.news_phone,
                                    content=news.news_content,
-                                   user_role = news.auth.user_role,
+                                   user_role=news.auth.user_role,
                                    user_id=news.auth.id
                                    ))
         return JsonResponse(resp(True, dict(
@@ -138,6 +142,7 @@ def news_list(request):
         print(e)
         return JsonResponse(resp(False, '参数错误'))
 
+
 def news_detail(request):
     try:
         data = request.body.decode()
@@ -147,10 +152,10 @@ def news_detail(request):
         return JsonResponse(resp(True, dict(title=news.news_title,
                                             date=news.news_dt.strftime('%Y-%m-%d %H:%M:%S'),
                                             content=news.news_content,
-                                            id = news.id,
-                                            count = news.news_count,
-                                            price = news.news_price,
-                                            phone = news.news_phone,
+                                            id=news.id,
+                                            count=news.news_count,
+                                            price=news.news_price,
+                                            phone=news.news_phone,
                                             user_role=news.auth.user_role,
                                             )))
     except Exception as e:

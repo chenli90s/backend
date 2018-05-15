@@ -10,7 +10,7 @@ from django.core.paginator import Paginator
 def login(request):
     user = json.loads(request.body.decode())
     try:
-        users = User.objects.get(user_name=user.get('name', ''))
+        users = User.objects.get(user_phone=user.get('phone', ''))
         if not users.user_pass is user.get('pswd', ''):
             return JsonResponse(resp(True, dict(user_id=users.id,
                                                 user_name=users.user_name,
@@ -20,6 +20,7 @@ def login(request):
                                                 user_addr=users.user_addr,
                                                 user_real=users.user_real, )))
     except  Exception as e:
+        print(e)
         return JsonResponse(resp(False, '密码或用户名错误'))
     return JsonResponse(resp(False, '密码或用户名错误'))
 
@@ -33,7 +34,7 @@ def regist(request):
         user.user_pass = post.get('user_pass')
         user.user_phone = post.get('user_phone')
         user.user_role = post.get('user_role')
-        user.user_addr = post.get('user_addr')
+        # user.user_addr = post.get('user_addr')
         user.user_real = post.get('user_real')
         user.save()
     except Exception as e:
@@ -49,11 +50,16 @@ def add_new(request):
         news = News()
         news.news_title = post.get('news_title')
         news.news_content = post.get('news_content')
+        news.news_count = post.get('news_count')
+        news.news_price = post.get('news_price')
+        news.news_phone = post.get('news_phone')
         user = User.objects.get(id=post.get('user_id'))
+        print(user)
         news.auth = user
         news.save()
         return JsonResponse(resp(True, '发布成功'))
     except Exception as e:
+        print(e)
         return JsonResponse(resp(False, '参数错误'))
 
 
@@ -80,6 +86,12 @@ def up_news(request):
         #     news.news_dt = post.get('news_dt')
         if post.get('news_content'):
             news.news_content = post.get('news_content')
+        if post.get('news_count'):
+            news.news_content = post.get('news_count')
+        if post.get('news_price'):
+            news.news_content = post.get('news_price')
+        if post.get('news_phone'):
+            news.news_content = post.get('news_phone')
         news.save(force_update=True)
         return JsonResponse(resp(True, '修改成功'))
     except Exception as e:
@@ -91,19 +103,26 @@ def news_list(request):
     try:
         data = request.body.decode()
         post = json.loads(data)
-        page_size = post.get('page_size')
-        current_page = post.get('current_page')
-        pages = News.objects.all().order_by("-news_dt")
-        pages = Paginator(pages, page_size)
-        all_page = pages.count
-        current_list = pages.page(current_page)
+        # page_size = post.get('page_size')
+        # current_page = post.get('current_page')
+        user_role = post.get('user_role')
+        pages = News.objects.filter(auth__user_role__contains=user_role).order_by("-news_dt")
+        # pages = Paginator(pages, page_size)
+        # all_page = pages.count
+        # current_list = pages.page(current_page)
         news_lists = []
-        for news in current_list:
+        for news in pages:
             print(news.news_dt)
-            news_lists.append(dict(news_title=news.news_title,news_dt=news.news_dt.strftime('%Y-%m-%d %H:%M:%S'), id=news.id))
+            news_lists.append(dict(news_title=news.news_title,
+                                   news_dt=news.news_dt.strftime('%Y-%m-%d %H:%M:%S'),
+                                   id=news.id,
+                                   count=news.news_count,
+                                   price=news.news_price,
+                                   phone=news.news_phone,
+                                   ))
         return JsonResponse(resp(True, dict(
-            current_page=current_page,
-            all_page=all_page,
+            # current_page=current_page,
+            user_role=user_role,
             news=news_lists
         )))
     except Exception as e:
@@ -118,7 +137,12 @@ def news_detail(request):
         news = News.objects.get(id=id)
         return JsonResponse(resp(True, dict(title=news.news_title,
                                             date=news.news_dt.strftime('%Y-%m-%d %H:%M:%S'),
-                                            content=news.news_content)))
+                                            content=news.news_content,
+                                            id = news.id,
+                                            count = news.news_count,
+                                            price = news.news_price,
+                                            phone = news.news_phone,
+                                            )))
     except Exception as e:
         print(e)
         return JsonResponse(resp(False, '参数错误,或id不存在'))

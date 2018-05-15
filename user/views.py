@@ -11,7 +11,8 @@ def login(request):
     user = json.loads(request.body.decode())
     try:
         users = User.objects.get(user_phone=user.get('phone', ''))
-        if not users.user_pass is user.get('pswd', ''):
+        pswd = user.get('pswd', '')
+        if users.user_pass == pswd:
             return JsonResponse(resp(True, dict(user_id=users.id,
                                                 user_name=users.user_name,
                                                 user_pass=users.user_pass,

@@ -12,6 +12,8 @@ class User(models.Model):
     user_real = models.TextField(verbose_name='实名',max_length=50,default=None,blank=True, null=True)
     class Meta:
         verbose_name_plural = "账号"
+    def __str__(self):
+        return self.user_name
 
 class Goods(models.Model):
     good_name = models.TextField(max_length=50,default=None,blank=True, null=True)
@@ -33,3 +35,5 @@ class News(models.Model):
     auth = models.ForeignKey(User, on_delete=None, verbose_name='发布者',)
     class Meta:
         verbose_name_plural = "信息"
+    def __str__(self):
+        return self.news_title

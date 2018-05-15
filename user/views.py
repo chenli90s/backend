@@ -119,6 +119,7 @@ def news_list(request):
                                    count=news.news_count,
                                    price=news.news_price,
                                    phone=news.news_phone,
+                                   user_role = news.auth.user_role
                                    ))
         return JsonResponse(resp(True, dict(
             # current_page=current_page,
@@ -142,6 +143,7 @@ def news_detail(request):
                                             count = news.news_count,
                                             price = news.news_price,
                                             phone = news.news_phone,
+                                            user_role=news.auth.user_role,
                                             )))
     except Exception as e:
         print(e)

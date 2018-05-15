@@ -125,6 +125,7 @@ def news_list(request):
                                    count=news.news_count,
                                    price=news.news_price,
                                    phone=news.news_phone,
+                                   content=news.news_content,
                                    user_role = news.auth.user_role
                                    ))
         return JsonResponse(resp(True, dict(

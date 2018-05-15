@@ -33,6 +33,12 @@ def regist(request):
         user.user_name = post.get('user_name')
         user.user_pass = post.get('user_pass')
         user.user_phone = post.get('user_phone')
+        try:
+            db = User.objects.get(user_phone=user.user_phone)
+            if db:
+                return JsonResponse(resp(False, '手机号已注册'))
+        except:
+            pass
         user.user_role = post.get('user_role')
         # user.user_addr = post.get('user_addr')
         user.user_real = post.get('user_real')

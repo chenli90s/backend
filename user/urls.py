@@ -8,5 +8,6 @@ urlpatterns = [
     path('delNews', del_news),
     path('upNews', up_news),
     path('newsList', news_list),
-    path('newsDetail', news_detail)
+    path('newsDetail', news_detail),
+    path('weather', get_weather)
 ]

@@ -37,3 +37,12 @@ class News(models.Model):
         verbose_name_plural = "信息"
     def __str__(self):
         return self.news_title
+
+class Weather(models.Model):
+
+    info = models.TextField(verbose_name='预告信息',max_length=500,default=None,blank=True, null=True)
+    date_time = models.DateTimeField(verbose_name='预告时间',blank=True, null=True)
+    class Meta:
+        verbose_name_plural = "极端天气预告"
+    def __str__(self):
+        return self.info

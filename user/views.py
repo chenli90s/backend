@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from .models import *
 import json
 from .utils import *
-from django.core.paginator import Paginator
+# from django.core.paginator import Paginator
 
 
 # Create your views here.
@@ -162,5 +162,13 @@ def news_detail(request):
     except Exception as e:
         print(e)
         return JsonResponse(resp(False, '参数错误,或id不存在'))
+
+from datetime import datetime
+def get_weather(request):
+    res = Weather.objects.filter(date_time__gte=datetime.now())
+    ls = []
+    for ss in res:
+        ls.append(dict(info=ss.info, date=ss.date_time.strftime('%Y-%m-%d %H:%M')))
+    return JsonResponse(dict(data=ls))
 
 

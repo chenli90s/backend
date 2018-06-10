@@ -22,4 +22,10 @@ class NewsAdmin(admin.ModelAdmin):
     list_display = (['news_title','news_dt', 'news_count', 'news_price', 'news_phone'])
     # inlines = [UserSubInline, ]
 
+@admin.register(Weather)
+class NewsAdmin(admin.ModelAdmin):
+    #设置哪些字段可以点击进入编辑界面
+    list_display = (['info', 'date_time'])
+    # inlines = [UserSubInline, ]
+
 
